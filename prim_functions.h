@@ -10,7 +10,7 @@ namespace major_functions
 	/// <param name=""></param>
 	/// <param name="irp_ptr"></param>
 	/// <returns></returns>
-	NTSTATUS mj_create( DEVICE_OBJECT*, IRP* irp_ptr )
+	inline NTSTATUS mj_create( DEVICE_OBJECT*, IRP* irp_ptr )
 	{
 		util::log( "%s", "MJ_CREATE Major Function called." );
 
@@ -32,7 +32,7 @@ namespace major_functions
 	/// <param name=""></param>
 	/// <param name="irp_ptr"></param>
 	/// <returns></returns>
-	NTSTATUS mj_close( DEVICE_OBJECT*, IRP* irp_ptr )
+	inline NTSTATUS mj_close( PDEVICE_OBJECT, IRP* irp_ptr )
 	{
 		util::log( "%s", "MJ_CLOSE Major Function called." );
 		// resetting for preparation for a new user-mode process to establish a connection to.
@@ -52,7 +52,7 @@ namespace major_functions
 	/// <param name=""></param>
 	/// <param name="irp_ptr"></param>
 	/// <returns></returns>
-	NTSTATUS mj_ioctl_dispatcher( DEVICE_OBJECT*, IRP* irp_ptr )
+	NTSTATUS mj_ioctl_dispatcher( PDEVICE_OBJECT, IRP* irp_ptr )
 	{
 		util::log( "%s", "MJ_IOCTL_HANDLER Major Function called." );
 
@@ -122,11 +122,11 @@ namespace major_functions
 	/// This function is responsible for cleaning up.
 	/// </summary>
 	/// <param name="driver_object_ptr"></param>
-	void DriverUnload( DRIVER_OBJECT* driver_object_ptr )
+	inline void DriverUnload( PDRIVER_OBJECT pdriver_object )
 	{
 		util::log( "%s", "DriverUnload callback called. Cleaning up the driver." );
 		IoDeleteSymbolicLink( &driver_globals::driver_device::dos_device_name );
-		IoDeleteDevice( driver_object_ptr->DeviceObject );
+		IoDeleteDevice( pdriver_object->DeviceObject );
 		ObfDereferenceObject( &driver_globals::um_process.um_process );
 		util::log( "%s", "DriverUnload call complete." );
 	}

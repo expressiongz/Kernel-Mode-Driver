@@ -25,10 +25,11 @@ void mj_function_setup( PDRIVER_OBJECT pdriver_object )
 extern "C" NTSTATUS DriverEntry( PDRIVER_OBJECT pdriver_object, UNICODE_STRING* )
 {
 	util::log( "%s", "DriverEntry callback called. Starting KM READWRITE Driver setup." );
+	
 	// set up major functions
 	mj_function_setup( pdriver_object );
-	// set up device object and symbolic link
 
+	// set up device object and symbolic link
 	RtlInitUnicodeString( &driver_globals::driver_device::dos_device_name, L"\\Device\\km_readwrite" );
 	RtlInitUnicodeString( &driver_globals::driver_device::device_name, L"\\DosDevices\\km_readwrite" );
 	
@@ -45,6 +46,7 @@ extern "C" NTSTATUS DriverEntry( PDRIVER_OBJECT pdriver_object, UNICODE_STRING* 
 	if( device_obj_creation_status != STATUS_SUCCESS )
 	{
 		util::log( "%s %i", "IoCreateDevice failed. Returning: ", device_obj_creation_status );
+		IoDeleteDevice( pdriver_object->DeviceObject );
 		return device_obj_creation_status;
 	}
 	
@@ -56,6 +58,7 @@ extern "C" NTSTATUS DriverEntry( PDRIVER_OBJECT pdriver_object, UNICODE_STRING* 
 	if( symbolic_link_creation_status != STATUS_SUCCESS )
 	{
 		util::log( "%s %i", "IoCreateSymbolicLink failed. Returning: ", symbolic_link_creation_status );
+		IoDeleteDevice( pdriver_object->DeviceObject );
 		return symbolic_link_creation_status;
 	}
 	util::log( "%s", "Created Symbolic Link." );

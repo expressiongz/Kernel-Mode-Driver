@@ -27,20 +27,20 @@ namespace driver_globals
 {
 	namespace driver_device
 	{	
-		DEVICE_OBJECT* device_object{ nullptr };	
-		UNICODE_STRING dos_device_name{ };
-		UNICODE_STRING device_name{ };
+		inline DEVICE_OBJECT* device_object{ nullptr };	
+		inline UNICODE_STRING dos_device_name{ };
+		inline UNICODE_STRING device_name{ };
 	}
 
-	bool connection_initialized{ false };
-	structs::um_process_t um_process{ };
+	inline bool connection_initialized{ false };
+	inline structs::um_process_t um_process{ };
 }
 
 namespace util
 {
 
 	template< typename... args_t >
-	__forceinline void log( const char* format, args_t&&... args )
+	void log( const char* format, args_t&&... args )
 	{
 		if constexpr( debug )
 			DbgPrintEx( 0, 0, format, args... );
