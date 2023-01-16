@@ -34,7 +34,7 @@ extern "C" NTSTATUS DriverEntry( PDRIVER_OBJECT pdriver_object,
         "DriverEntry callback called. Starting KM READWRITE Driver setup." );
 
     // set up major functions
-    mj_function_setup( pdriver_object );
+    
 
     // set up device object and symbolic link
     RtlInitUnicodeString( &driver_globals::driver_data::driver_name,
@@ -71,6 +71,7 @@ extern "C" NTSTATUS DriverEntry( PDRIVER_OBJECT pdriver_object,
         return symbolic_link_creation_status;
     }
     util::log( "%s", "Created Symbolic Link." );
+    mj_function_setup( pdriver_object );
     util::log( "%s", "KM READWRITE Driver ready for use." );
     return STATUS_SUCCESS;
 }
